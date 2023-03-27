@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+    <script>
+        function obtenerDatos() {
+
+            var username = document.getElementById("input-username").value;
+
+            $.ajax("https://api.github.com/users/"+username, "GET").done(function(data) {
+
+                    var tabla = document.getElementById("tabla-usuario");
+                    var fila = tabla.insertRow();
+                    var celdaNombre = fila.insertCell();
+                    var celdaDescripcion = fila.insertCell();
+                    var celdaSeguidores = fila.insertCell();
+                    var celdaRepositorios = fila.insertCell();
+                    celdaNombre.innerHTML = data.name;
+                    celdaDescripcion.innerHTML = data.bio;
+                    celdaSeguidores.innerHTML = data.followers;
+                    celdaRepositorios.innerHTML = data.public_repos;
+            })
+        }
+    </script>
+
+    <title>Title</title>
+</head>
+<body>
+<div class="jumbotron">
+    <h1>  Pagina web super molona</h1>
+    <p>¡Utiliza el buscador para stalkear a alguien!</p>
+</div>
+<div class="container">
+
+    <input type="text" id="input-username">
+    <button onclick="obtenerDatos()">Obtener datos del usuario</button>
+    <div id="username"></div>
+
+    <table id="tabla-usuario" class="table">
+        <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Descripción</th>
+            <th>Seguidores</th>
+            <th>Repositorios</th>
+        </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+
+</div>
+</body>
+</html>
