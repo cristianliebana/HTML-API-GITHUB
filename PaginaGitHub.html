@@ -8,24 +8,31 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 
     <script>
-        function obtenerDatos() {
+        $(document).ready(function() {
+            $('#obtenerrepos').click(function() {
+                var username = $('#username').val();
+                var tablarepos = $('#tablarepos tbody');
+                tablarepos.empty();
 
-            var username = document.getElementById("input-username").value;
-
-            $.ajax("https://api.github.com/users/"+username, "GET").done(function(data) {
-
-                    var tabla = document.getElementById("tabla-usuario");
-                    var fila = tabla.insertRow();
-                    var celdaNombre = fila.insertCell();
-                    var celdaDescripcion = fila.insertCell();
-                    var celdaSeguidores = fila.insertCell();
-                    var celdaRepositorios = fila.insertCell();
-                    celdaNombre.innerHTML = data.name;
-                    celdaDescripcion.innerHTML = data.bio;
-                    celdaSeguidores.innerHTML = data.followers;
-                    celdaRepositorios.innerHTML = data.public_repos;
-            })
-        }
+                $.ajax({
+                    url: 'https://api.github.com/users/' + username + '/repos',
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function(data) {
+                        $.each(data, function(i, repo) {
+                            var row = $('<tr>');
+                            row.append($('<td>').text(repo.name));
+                            row.append($('<td>').text(repo.description));
+                            row.append($('<td>').text(repo.watchers_count));
+                            tablarepos.append(row);
+                        });
+                    },
+                    error: function() {
+                        alert('Error al obtener los repositorios.');
+                    }
+                });
+            });
+        });
     </script>
 
     <title>Title</title>
@@ -37,17 +44,14 @@
 </div>
 <div class="container">
 
-    <input type="text" id="input-username">
-    <button onclick="obtenerDatos()">Obtener datos del usuario</button>
-    <div id="username"></div>
-
-    <table id="tabla-usuario" class="table">
+    <input type="text" id="username">
+    <button id="obtenerrepos">Obtener Repositorios</button>
+    <table id="tablarepos" class="table">
         <thead>
         <tr>
-            <th>Nombre</th>
+            <th>Nombre del Repositorio</th>
             <th>Descripción</th>
-            <th>Seguidores</th>
-            <th>Repositorios</th>
+            <th>Número de Seguidores</th>
         </tr>
         </thead>
         <tbody>
